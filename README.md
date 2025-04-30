@@ -8,56 +8,73 @@ To write a program to implement the K Means Clustering for Customer Segmentation
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-1.Import libraries and load data.
+1.Import the necessary packages using import statement.
 
-2.Select features for clustering.
+2.Read the given csv file using read_csv() method and print the number of contents to be displayed using df.head().
 
-3.Fit KMeans model with chosen clusters (e.g., k=5).
+3.Import KMeans and use for loop to cluster the data.
 
-4.Predict clusters and plot results.
+4.Predict the cluster and plot data graphs.
 
-5.Print cluster centers and finish.
+5.Print the outputs and end the program
 
 ## Program:
 ```
+/*
 Program to implement the K Means Clustering for Customer Segmentation.
+Developed by: SANJEEV RAJ.S   
+RegisterNumber:  212223220096
+*/
+```
+```
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.cluster import KMeans
 
-# Load and prepare data
-data = pd.read_csv("/content/Mall_Customers.csv")
-X = data[['Annual Income (k$)', 'Spending Score (1-100)']]
+df = pd.read_csv('/content/Mall_Customers.csv')
 
-# Apply K-Means
-kmeans = KMeans(n_clusters=5)
-kmeans.fit(X)
-labels = kmeans.labels_
-centers = kmeans.cluster_centers_
+print("Dataset Head:\n", df.head())
+```
+```
 
-# Plot clusters
-colors = ['r', 'g', 'b', 'c', 'm']
+X = df.iloc[:, [3, 4]].values  
+wcss = []
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters=i, init='k-means++', random_state=42)
+    kmeans.fit(X)
+    wcss.append(kmeans.inertia_)
+
+plt.figure(figsize=(8, 5))
+plt.plot(range(1, 11), wcss, marker='o')
+plt.title('The Elbow Method')
+plt.xlabel('Number of clusters')
+plt.ylabel('WCSS')
+plt.grid(True)
+plt.show()
+```
+```
+kmeans = KMeans(n_clusters=5, init='k-means++', random_state=42)
+y_kmeans = kmeans.fit_predict(X)
+
+plt.figure(figsize=(8, 6))
+colors = ['red', 'blue', 'green', 'cyan', 'magenta']
 for i in range(5):
-    plt.scatter(X[labels==i]['Annual Income (k$)'], X[labels==i]['Spending Score (1-100)'], color=colors[i], label=f'Cluster {i+1}')
-plt.scatter(centers[:,0], centers[:,1], color='black', s=200, label='Centroids')
+    plt.scatter(X[y_kmeans == i, 0], X[y_kmeans == i, 1], s=100, c=colors[i], label=f'Cluster {i+1}')
+plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1],
+            s=300, c='yellow', label='Centroids', edgecolor='black')
+plt.title('Customer Segments')
 plt.xlabel('Annual Income (k$)')
 plt.ylabel('Spending Score (1-100)')
-plt.title('K-Means Clustering')
 plt.legend()
 plt.grid(True)
 plt.show()
-
 ```
-
 ## Output:
-## VISUALIZE RAW DATA
-![Screenshot 2025-04-21 225451](https://github.com/user-attachments/assets/5838612b-ffcf-4797-aacb-7a9faa7f0618)
-## PRINT CLUSTER CENTERS
-![Screenshot 2025-04-21 225512](https://github.com/user-attachments/assets/f2343d2c-b1f9-45f4-b9c7-39e9c235e039)
+![image](https://github.com/user-attachments/assets/b0d3e130-a530-46bf-9cb9-364e0db552f8)
+![download](https://github.com/user-attachments/assets/41dc0d32-cefd-4644-a771-c3af6a1df4f2)
+![download](https://github.com/user-attachments/assets/d11183f2-3168-4c62-9277-ad37eed5985b)
 
-## Developed by : SANJEEV RAJ.S
-## Reg no: 212223220096
 
 ## Result:
 Thus the program to implement the K Means Clustering for Customer Segmentation is written and verified using python programming.
